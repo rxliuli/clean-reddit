@@ -21,10 +21,8 @@ export default defineConfig({
   manifest: (env) => {
     const manifest: UserManifest = {
       name: 'Clean Reddit',
-      description:
-        'A template for WXT, a WebExtension framework based on Vite and React',
+      description: 'Remove clutter and distractions from Reddit',
       permissions: ['storage'],
-      host_permissions: ['<all_urls>'],
       author: {
         email: 'rxliuli@gmail.com',
       },
