@@ -4,13 +4,13 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   modules: ['@wxt-dev/module-react', 'wxt-module-safari-xcode'],
   safariXcode: {
-    projectName: 'Browser Extension Template',
+    projectName: 'Clean Reddit',
     appCategory: 'public.app-category.productivity',
-    bundleIdentifier: 'com.rxliuli.browser-extension-template',
+    bundleIdentifier: 'com.rxliuli.clean-reddit',
     developmentTeam: 'N2X78TUUFG',
   },
   vite: () => ({
-    plugins: [tailwindcss()] as any,
+    plugins: [tailwindcss()],
     resolve: {
       alias: {
         '@': __dirname,
@@ -20,7 +20,7 @@ export default defineConfig({
   manifestVersion: 3,
   manifest: (env) => {
     const manifest: UserManifest = {
-      name: 'Browser Extension Template',
+      name: 'Clean Reddit',
       description:
         'A template for WXT, a WebExtension framework based on Vite and React',
       permissions: ['storage'],
@@ -37,7 +37,7 @@ export default defineConfig({
           '128': 'icon/128.png',
         },
       },
-      homepage_url: 'https://rxliuli.com/project/browser-extension-template',
+      homepage_url: 'https://rxliuli.com/project/clean-reddit',
     }
     if (env.browser === 'firefox') {
       manifest.browser_specific_settings = {

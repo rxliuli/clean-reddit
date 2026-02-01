@@ -1,60 +1,108 @@
-# Browser Extension Template
+# Clean Reddit
 
-A modern browser extension development template built with React, Shadcn/ui, and WXT. Supports building cross-browser extensions compatible with Chrome, Edge, Firefox, and Safari (requires macOS).
+A browser extension that removes clutter and distractions from Reddit, giving you a cleaner browsing experience.
 
-## Getting Started
+## Features
 
-### Initialize Project
+Clean Reddit allows you to hide various UI elements across different sections of Reddit:
 
-```sh
-git clone https://github.com/<your-github-username>/<your-project-name>.git
-cd <your-project-name>
-pnpm i
-pnpm init-project
-```
+### Left Sidebar
 
-Follow the prompts to enter your project name and complete the initialization.
+- **Home button** - Hide the home navigation button
+- **Games on Reddit** - Hide the games section
+- **Feeds** - Hide custom feeds
+- **Recent Communities** - Hide recently visited communities
+- **Communities** - Hide the communities section
+- **Resources** - Hide Reddit resources links
+- **Reddit Inc** - Hide Reddit Inc footer links
+
+### Right Sidebar
+
+- **Right sidebar** - Hide the entire right sidebar and legal links
+
+### Top Navigation
+
+- **Notification dot** - Hide the notification badge
+- **Leading icon** - Hide the leading icon
+- **Ask AI** - Hide the Ask AI banner in search
+- **Advertise button** - Hide the advertise button
+
+### Content Feed
+
+- **Suggested for you** - Hide "Suggested for you" posts
+- **Popular near you** - Hide "Popular near you" and "Popular on Reddit right now" posts
+- **Interest-based recommendations** - Hide posts based on your interests
+- **Visited community posts** - Hide posts from previously visited communities
+
+### Avatar Menu
+
+- **Achievements** - Hide achievements link
+- **Earn** - Hide earn link
+- **Premium** - Hide premium link
+- **Advertise on Reddit** - Hide advertise link
+- **Try Reddit Pro** - Hide Reddit Pro link
+
+## Installation
+
+### Chrome / Edge
+
+1. Download the latest release from the [Releases](https://github.com/rxliuli/clean-reddit/releases) page
+2. Unzip the downloaded file
+3. Open `chrome://extensions` (or `edge://extensions`)
+4. Enable "Developer mode"
+5. Click "Load unpacked" and select the unzipped folder
+
+### Firefox
+
+1. Download the Firefox version from the [Releases](https://github.com/rxliuli/clean-reddit/releases) page
+2. Open `about:addons`
+3. Click the gear icon and select "Install Add-on From File..."
+4. Select the downloaded `.xpi` file
+
+## Usage
+
+1. Click the extension icon in your browser toolbar
+2. Toggle the switches to hide/show different UI elements
+3. Changes take effect immediately
 
 ## Development
 
-Chrome is used as the baseline version for development. Edge, Firefox, and Safari builds are only created when needed for publishing, testing, or debugging platform-specific issues.
+### Prerequisites
+
+- Node.js (latest LTS recommended)
+- pnpm package manager
 
 ### Start Development Server
 
 ```sh
+pnpm install
 pnpm dev
 ```
 
 After running the development server:
 
-1. Navigate to the `*.output/chrome-mv3-dev` directory to find the compiled extension files
+1. Navigate to the `.output/chrome-mv3-dev` directory
 2. Open `chrome://extensions` in Chrome
 3. Enable "Developer mode"
-4. Drag and drop the output directory to load the extension for debugging
+4. Click "Load unpacked" and select the output directory
 
-## Build & Package
-
-### Chrome, Edge, and Firefox
-
-Generate production builds and create zip files for distribution:
+### Build
 
 ```sh
-pnpm zip && pnpm zip:firefox
+# Chrome/Edge
+pnpm zip
+
+# Firefox
+pnpm zip:firefox
+
+# Safari (macOS only)
+pnpm build:safari
 ```
 
-### Safari
+## Community
 
-Safari extension requires macOS environment and Xcode for building and publishing.
+Join our [Discord](https://discord.gg/Cwre8EwkNX) for support and discussions.
 
-#### Build Steps
+## License
 
-1. Update `developmentTeam` in `wxt.config.ts` with your Apple Developer Team ID
-2. Run `pnpm build:safari` - this will automatically build and open Xcode
-3. Build the project in Xcode and test in Safari
-4. To publish: In Xcode, select **Product → Archive** to submit to the App Store
-
-## Requirements
-
-- Node.js (latest LTS recommended)
-- pnpm package manager
-- macOS with Xcode (for Safari development only)
+MIT
