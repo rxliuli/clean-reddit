@@ -7,9 +7,7 @@ describe('suggestedForYou', () => {
   it('should return correct plugin configuration', () => {
     const plugin = suggestedForYou()
     expect(plugin.name).eq('suggested')
-    expect(plugin.description).eq(
-      "Hide posts that are marked as 'Suggested for you' on Reddit.",
-    )
+    expect(plugin.description).eq('Suggested for you')
     expect(plugin.selectors).instanceOf(Array)
     expect(plugin.selectors.length).gt(0)
   })

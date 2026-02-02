@@ -7,9 +7,7 @@ describe('popularNearYou', () => {
   it('should return correct plugin configuration', () => {
     const plugin = popular()
     expect(plugin.name).eq('popular')
-    expect(plugin.description).eq(
-      'Hide the "Popular Near You" section on the Reddit homepage.',
-    )
+    expect(plugin.description).eq('Popular near you')
     expect(plugin.selectors).instanceOf(Array)
     expect(plugin.selectors.length).gt(0)
   })

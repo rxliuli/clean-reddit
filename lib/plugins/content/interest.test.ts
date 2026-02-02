@@ -7,9 +7,7 @@ describe('interestTopic', () => {
   it('should return correct plugin configuration', () => {
     const plugin = interest()
     expect(plugin.name).eq('interest')
-    expect(plugin.description).eq(
-      'Hide the "Because you\'ve shown interest in a similar topic" section on Reddit.',
-    )
+    expect(plugin.description).eq('Interest-based recommendations')
     expect(plugin.selectors).instanceOf(Array)
     expect(plugin.selectors.length).gt(0)
   })

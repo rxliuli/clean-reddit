@@ -1,4 +1,3 @@
-import { hideElement } from '../../css'
 import { BasePlugin } from '../type'
 
 // GAMES ON REDDIT
