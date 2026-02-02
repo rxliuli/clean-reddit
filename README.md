@@ -105,4 +105,4 @@ Join our [Discord](https://discord.gg/Cwre8EwkNX) for support and discussions.
 
 ## License
 
-MIT
+GPL-3.0 License © 2026 rxliuli
