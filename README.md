@@ -46,18 +46,15 @@ Clean Reddit allows you to hide various UI elements across different sections of
 
 ### Chrome / Edge
 
-1. Download the latest release from the [Releases](https://github.com/rxliuli/clean-reddit/releases) page
-2. Unzip the downloaded file
-3. Open `chrome://extensions` (or `edge://extensions`)
-4. Enable "Developer mode"
-5. Click "Load unpacked" and select the unzipped folder
+Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/clean-reddit/lchnofghcmjcpcglhklofjpfddkcenof).
 
 ### Firefox
 
-1. Download the Firefox version from the [Releases](https://github.com/rxliuli/clean-reddit/releases) page
-2. Open `about:addons`
-3. Click the gear icon and select "Install Add-on From File..."
-4. Select the downloaded `.xpi` file
+Install from [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/clean-reddit/).
+
+### Safari
+
+Coming soon (pending approval).
 
 ## Usage
 
