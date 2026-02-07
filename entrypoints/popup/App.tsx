@@ -65,7 +65,7 @@ export function App() {
   }
 
   return (
-    <div className="w-80 p-4">
+    <div className="w-full min-w-80 p-4">
       <div className="flex items-center justify-between mb-2">
         <h1 className="text-lg font-semibold">Clean Reddit</h1>
         <a

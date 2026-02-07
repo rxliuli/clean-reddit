@@ -413,6 +413,50 @@ describe('observeElements', () => {
     })
   })
 
+  describe('shadow DOM', () => {
+    it('should match elements inside shadow roots on initial scan', () => {
+      const host = document.createElement('div')
+      const shadow = host.attachShadow({ mode: 'open' })
+      const target = document.createElement('div')
+      target.className = 'target'
+      shadow.appendChild(target)
+      container.appendChild(host)
+
+      const onElements = vi.fn()
+      cleanup = observeElements({
+        selector: '.target',
+        onElements,
+        supportShadowDOM: true,
+        root: container,
+      })
+
+      expect(onElements).toHaveBeenCalledWith([target])
+    })
+
+    it('should match elements inside nested shadow roots when dynamically added', async () => {
+      const onElements = vi.fn()
+      cleanup = observeElements({
+        selector: '.target',
+        onElements,
+        supportShadowDOM: true,
+        root: container,
+      })
+
+      // Create a web component with a shadow root containing .target
+      const host = document.createElement('div')
+      const shadow = host.attachShadow({ mode: 'open' })
+      const target = document.createElement('div')
+      target.className = 'target'
+      shadow.appendChild(target)
+
+      container.appendChild(host)
+
+      await waitForObserver()
+
+      expect(onElements).toHaveBeenCalledWith([target])
+    })
+  })
+
   describe('cleanup', () => {
     it('should stop observing after cleanup', async () => {
       const onElements = vi.fn()
