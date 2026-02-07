@@ -304,4 +304,140 @@ describe('matches', () => {
       expect(matches(hr, parse('#left-sidebar [selectedpagetype] + hr'))).toBe(true)
     })
   })
+
+  describe(':nth-child()', () => {
+    it('should match by number', () => {
+      container.innerHTML = '<div></div><div></div><div></div>'
+      expect(matches(container.children[0] as Element, parse(':nth-child(1)'))).toBe(true)
+      expect(matches(container.children[1] as Element, parse(':nth-child(2)'))).toBe(true)
+      expect(matches(container.children[2] as Element, parse(':nth-child(3)'))).toBe(true)
+      expect(matches(container.children[0] as Element, parse(':nth-child(2)'))).toBe(false)
+    })
+
+    it('should match odd', () => {
+      container.innerHTML = '<div></div><div></div><div></div><div></div>'
+      expect(matches(container.children[0] as Element, parse(':nth-child(odd)'))).toBe(true)
+      expect(matches(container.children[1] as Element, parse(':nth-child(odd)'))).toBe(false)
+      expect(matches(container.children[2] as Element, parse(':nth-child(odd)'))).toBe(true)
+      expect(matches(container.children[3] as Element, parse(':nth-child(odd)'))).toBe(false)
+    })
+
+    it('should match even', () => {
+      container.innerHTML = '<div></div><div></div><div></div><div></div>'
+      expect(matches(container.children[0] as Element, parse(':nth-child(even)'))).toBe(false)
+      expect(matches(container.children[1] as Element, parse(':nth-child(even)'))).toBe(true)
+      expect(matches(container.children[2] as Element, parse(':nth-child(even)'))).toBe(false)
+      expect(matches(container.children[3] as Element, parse(':nth-child(even)'))).toBe(true)
+    })
+
+    it('should match An+B expression', () => {
+      container.innerHTML = '<div></div><div></div><div></div><div></div><div></div><div></div>'
+      // 3n+1 matches 1, 4
+      expect(matches(container.children[0] as Element, parse(':nth-child(3n+1)'))).toBe(true)
+      expect(matches(container.children[1] as Element, parse(':nth-child(3n+1)'))).toBe(false)
+      expect(matches(container.children[2] as Element, parse(':nth-child(3n+1)'))).toBe(false)
+      expect(matches(container.children[3] as Element, parse(':nth-child(3n+1)'))).toBe(true)
+    })
+
+    it('should match -n+3 (first 3 elements)', () => {
+      container.innerHTML = '<div></div><div></div><div></div><div></div>'
+      expect(matches(container.children[0] as Element, parse(':nth-child(-n+3)'))).toBe(true)
+      expect(matches(container.children[1] as Element, parse(':nth-child(-n+3)'))).toBe(true)
+      expect(matches(container.children[2] as Element, parse(':nth-child(-n+3)'))).toBe(true)
+      expect(matches(container.children[3] as Element, parse(':nth-child(-n+3)'))).toBe(false)
+    })
+  })
+
+  describe(':nth-last-child()', () => {
+    it('should count from the end', () => {
+      container.innerHTML = '<div></div><div></div><div></div>'
+      expect(matches(container.children[2] as Element, parse(':nth-last-child(1)'))).toBe(true)
+      expect(matches(container.children[1] as Element, parse(':nth-last-child(2)'))).toBe(true)
+      expect(matches(container.children[0] as Element, parse(':nth-last-child(3)'))).toBe(true)
+      expect(matches(container.children[0] as Element, parse(':nth-last-child(1)'))).toBe(false)
+    })
+  })
+
+  describe(':nth-of-type()', () => {
+    it('should count only elements of the same type', () => {
+      container.innerHTML = '<div></div><span></span><div></div><span></span><div></div>'
+      // divs: index 0(1st), 2(2nd), 4(3rd)
+      // spans: index 1(1st), 3(2nd)
+      expect(matches(container.children[0] as Element, parse('div:nth-of-type(1)'))).toBe(true)
+      expect(matches(container.children[2] as Element, parse('div:nth-of-type(2)'))).toBe(true)
+      expect(matches(container.children[4] as Element, parse('div:nth-of-type(3)'))).toBe(true)
+      expect(matches(container.children[1] as Element, parse('span:nth-of-type(1)'))).toBe(true)
+      expect(matches(container.children[3] as Element, parse('span:nth-of-type(2)'))).toBe(true)
+    })
+
+    it('should match odd of type', () => {
+      container.innerHTML = '<div></div><span></span><div></div><span></span><div></div>'
+      expect(matches(container.children[0] as Element, parse('div:nth-of-type(odd)'))).toBe(true)
+      expect(matches(container.children[2] as Element, parse('div:nth-of-type(odd)'))).toBe(false)
+      expect(matches(container.children[4] as Element, parse('div:nth-of-type(odd)'))).toBe(true)
+    })
+  })
+
+  describe(':nth-last-of-type()', () => {
+    it('should count from the end by type', () => {
+      container.innerHTML = '<div></div><span></span><div></div><span></span><div></div>'
+      // divs from end: index 4(1st), 2(2nd), 0(3rd)
+      expect(matches(container.children[4] as Element, parse('div:nth-last-of-type(1)'))).toBe(true)
+      expect(matches(container.children[2] as Element, parse('div:nth-last-of-type(2)'))).toBe(true)
+      expect(matches(container.children[0] as Element, parse('div:nth-last-of-type(3)'))).toBe(true)
+    })
+  })
+
+  describe(':first-of-type / :last-of-type / :only-of-type', () => {
+    it(':first-of-type', () => {
+      container.innerHTML = '<div></div><span></span><div></div>'
+      expect(matches(container.children[0] as Element, parse('div:first-of-type'))).toBe(true)
+      expect(matches(container.children[2] as Element, parse('div:first-of-type'))).toBe(false)
+      expect(matches(container.children[1] as Element, parse('span:first-of-type'))).toBe(true)
+    })
+
+    it(':last-of-type', () => {
+      container.innerHTML = '<div></div><span></span><div></div>'
+      expect(matches(container.children[0] as Element, parse('div:last-of-type'))).toBe(false)
+      expect(matches(container.children[2] as Element, parse('div:last-of-type'))).toBe(true)
+      expect(matches(container.children[1] as Element, parse('span:last-of-type'))).toBe(true)
+    })
+
+    it(':only-of-type', () => {
+      container.innerHTML = '<div></div><span></span><div></div>'
+      expect(matches(container.children[0] as Element, parse('div:only-of-type'))).toBe(false)
+      expect(matches(container.children[1] as Element, parse('span:only-of-type'))).toBe(true)
+    })
+  })
+
+  describe(':has-text()', () => {
+    it('should match element containing literal text', () => {
+      container.innerHTML = '<div>Hello World</div><div>Goodbye</div>'
+      expect(matches(container.children[0] as Element, parse(':has-text("Hello")'))).toBe(true)
+      expect(matches(container.children[1] as Element, parse(':has-text("Hello")'))).toBe(false)
+    })
+
+    it('should match text in nested children', () => {
+      container.innerHTML = '<div><span>Deep <b>text</b></span></div>'
+      expect(matches(container.children[0] as Element, parse(':has-text("Deep text")'))).toBe(true)
+    })
+
+    it('should support regex pattern', () => {
+      container.innerHTML = '<div>Price: 42.99 USD</div><div>No price</div>'
+      expect(matches(container.children[0] as Element, parse(':has-text(/[0-9]+\\.[0-9]+/)'))).toBe(true)
+      expect(matches(container.children[1] as Element, parse(':has-text(/[0-9]+\\.[0-9]+/)'))).toBe(false)
+    })
+
+    it('should support regex flags', () => {
+      container.innerHTML = '<div>HELLO world</div>'
+      expect(matches(container.children[0] as Element, parse(':has-text(/hello/i)'))).toBe(true)
+      expect(matches(container.children[0] as Element, parse(':has-text(/hello/)'))).toBe(false)
+    })
+
+    it('should work combined with :has()', () => {
+      container.innerHTML = '<article><div>Promoted content</div></article><article><div>Normal post</div></article>'
+      expect(matches(container.children[0] as Element, parse('article:has-text("Promoted")'))).toBe(true)
+      expect(matches(container.children[1] as Element, parse('article:has-text("Promoted")'))).toBe(false)
+    })
+  })
 })

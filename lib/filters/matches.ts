@@ -185,6 +185,33 @@ function matchesPseudo(
       return el.childNodes.length === 0
     case 'root':
       return el === el.ownerDocument?.documentElement
+    case 'nth-child':
+    case 'nth-last-child':
+    case 'nth-of-type':
+    case 'nth-last-of-type': {
+      if (typeof token.data !== 'string') return false
+      const { a, b } = parseNth(token.data)
+      const pos = getNthPosition(el, token.name as 'nth-child' | 'nth-last-child' | 'nth-of-type' | 'nth-last-of-type')
+      return matchesNth(pos, a, b)
+    }
+    case 'first-of-type':
+      return getNthPosition(el, 'nth-of-type') === 1
+    case 'last-of-type':
+      return getNthPosition(el, 'nth-last-of-type') === 1
+    case 'only-of-type':
+      return getNthPosition(el, 'nth-of-type') === 1 && getNthPosition(el, 'nth-last-of-type') === 1
+    case 'has-text': {
+      if (typeof token.data !== 'string') return false
+      const text = el.textContent ?? ''
+      if (token.data.startsWith('/')) {
+        const end = token.data.lastIndexOf('/')
+        const pattern = token.data.slice(1, end)
+        const flags = token.data.slice(end + 1)
+        return new RegExp(pattern, flags).test(text)
+      }
+      const literal = token.data.replace(/^["']|["']$/g, '')
+      return text.includes(literal)
+    }
     default:
       return false
   }
@@ -200,6 +227,51 @@ function isTraversal(token: Selector): boolean {
     token.type === SelectorType.Sibling ||
     token.type === SelectorType.ColumnCombinator
   )
+}
+
+/** Parse An+B expression string into { a, b } */
+function parseNth(data: string): { a: number; b: number } {
+  const s = data.replace(/\s+/g, '').toLowerCase()
+  if (s === 'odd') return { a: 2, b: 1 }
+  if (s === 'even') return { a: 2, b: 0 }
+
+  const match = s.match(/^([+-]?\d*)?n([+-]\d+)?$/)
+  if (!match) {
+    // Pure number like "3"
+    const num = parseInt(s, 10)
+    return { a: 0, b: isNaN(num) ? 0 : num }
+  }
+
+  const aStr = match[1]
+  const a = aStr === '' || aStr === '+' ? 1 : aStr === '-' ? -1 : parseInt(aStr, 10)
+  const b = match[2] ? parseInt(match[2], 10) : 0
+  return { a, b }
+}
+
+/** Get 1-based position of element among siblings for nth pseudo-classes */
+function getNthPosition(
+  el: Element,
+  type: 'nth-child' | 'nth-last-child' | 'nth-of-type' | 'nth-last-of-type',
+): number {
+  const reverse = type === 'nth-last-child' || type === 'nth-last-of-type'
+  const filterTag = type === 'nth-of-type' || type === 'nth-last-of-type'
+  const tagName = el.localName
+  let count = 1
+  let sibling: Element | null = reverse ? el.nextElementSibling : el.previousElementSibling
+  while (sibling !== null) {
+    if (!filterTag || sibling.localName === tagName) count++
+    sibling = reverse ? sibling.nextElementSibling : sibling.previousElementSibling
+  }
+  return count
+}
+
+/** Check if position matches An+B formula (for non-negative integer k) */
+function matchesNth(pos: number, a: number, b: number): boolean {
+  if (a === 0) return pos === b
+  const diff = pos - b
+  if (a > 0) return diff >= 0 && diff % a === 0
+  // a < 0: diff must be <= 0 and divisible by |a|
+  return diff <= 0 && diff % a === 0
 }
 
 /**
