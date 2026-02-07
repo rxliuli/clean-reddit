@@ -4,7 +4,6 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   modules: ['@wxt-dev/module-react', 'wxt-module-safari-xcode'],
   safariXcode: {
-    projectName: 'Clean Reddit',
     appCategory: 'public.app-category.productivity',
     bundleIdentifier: 'com.rxliuli.clean-reddit',
     developmentTeam: 'N2X78TUUFG',
@@ -20,7 +19,7 @@ export default defineConfig({
   manifestVersion: 3,
   manifest: (env) => {
     const manifest: UserManifest = {
-      name: 'Clean Reddit',
+      name: 'Clean for Reddit',
       description: 'Remove clutter and distractions from Reddit',
       permissions: ['storage'],
       author: {
@@ -52,6 +51,17 @@ export default defineConfig({
       // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/author
       // @ts-expect-error
       manifest.author = 'rxliuli'
+    } else if (env.browser === 'safari') {
+      manifest.name = 'Clean for Reddit'
+      manifest.description = 'Remove clutter and distractions from your feed'
+      manifest.icons = {
+        '16': 'icon/safari/16.png',
+        '32': 'icon/safari/32.png',
+        '48': 'icon/safari/48.png',
+        '96': 'icon/safari/96.png',
+        '128': 'icon/safari/128.png',
+      }
+      manifest.action!.default_icon = manifest.icons
     }
     return manifest
   },
