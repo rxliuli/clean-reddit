@@ -1,7 +1,6 @@
 import { getConfig } from '@/lib/config'
-import { observeElements } from '@/lib/observeElement'
+import { observe, querySelectorAll } from '@/lib/filters'
 import { plugins } from '@/lib/plugins'
-import { querySelectorAllDeep } from 'query-selector-shadow-dom'
 
 export default defineContentScript({
   matches: ['https://www.reddit.com/*'],
@@ -11,7 +10,10 @@ export default defineContentScript({
 
     const effects: (() => void)[] = []
     const activePlugins = () => {
-      querySelectorAllDeep('[clean-reddit="true"]').forEach((el) => {
+      querySelectorAll(
+        document.documentElement,
+        '[clean-reddit="true"]',
+      ).forEach((el) => {
         if (el instanceof HTMLElement) {
           el.style.display = ''
           el.removeAttribute('clean-reddit')
@@ -25,11 +27,10 @@ export default defineContentScript({
         activePlugins.map((it) => it.name),
       )
       const selectors = activePlugins.map((it) => it.selectors ?? []).flat()
-      const cleanup = observeElements({
-        selector: selectors.join(','),
-        supportShadowDOM: true,
-        root: document.documentElement,
-        onElements(elements) {
+      const cleanup = observe(
+        document.documentElement,
+        selectors.join(','),
+        (elements) => {
           elements.forEach((element) => {
             if (element instanceof HTMLElement) {
               element.style.display = 'none'
@@ -37,7 +38,7 @@ export default defineContentScript({
             }
           })
         },
-      })
+      )
       effects.push(cleanup)
     }
 

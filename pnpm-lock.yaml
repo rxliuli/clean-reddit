@@ -38,6 +38,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      css-what:
+        specifier: ^7.0.0
+        version: 7.0.0
       lucide-react:
         specifier: ^0.563.0
         version: 0.563.0(react@19.2.4)
@@ -1436,6 +1439,10 @@ packages:
 
   css-what@6.2.2:
     resolution: {integrity: sha512-u/O3vwbptzhMs3L1fQE82ZSLHQQfto5gyZzwteVIEyeaY5Fc7R4dapF/BvRoSYFeqfBk4m0V1Vafq5Pjv25wvA==}
+    engines: {node: '>= 6'}
+
+  css-what@7.0.0:
+    resolution: {integrity: sha512-wD5oz5xibMOPHzy13CyGmogB3phdvcDaB5t0W/Nr5Z2O/agcB8YwOz6e2Lsp10pNDzBoDO9nVa3RGs/2BttpHQ==}
     engines: {node: '>= 6'}
 
   cssom@0.5.0:
@@ -4074,6 +4081,8 @@ snapshots:
       nth-check: 2.1.1
 
   css-what@6.2.2: {}
+
+  css-what@7.0.0: {}
 
   cssom@0.5.0: {}
 

@@ -1,8 +1,9 @@
 import { plugins } from './plugins'
+import { communities } from './plugins/left/communities'
 import { BasePlugin } from './plugins/type'
 
 const enabledPlugins: BasePlugin[] = plugins.filter(
-  (it) => it.name !== 'communities',
+  (it) => it.name !== communities().name,
 )
 
 export const DEFAULT_CONFIG: Record<string, boolean> = enabledPlugins.reduce(
