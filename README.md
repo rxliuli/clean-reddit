@@ -29,10 +29,8 @@ Clean Reddit allows you to hide various UI elements across different sections of
 
 ### Content Feed
 
-- **Suggested for you** - Hide "Suggested for you" posts
-- **Popular near you** - Hide "Popular near you" and "Popular on Reddit right now" posts
-- **Interest-based recommendations** - Hide posts based on your interests
-- **Visited community posts** - Hide posts from previously visited communities
+- **Hide recommended posts** - Hide all recommended posts (popular, suggested, interest-based, etc.)
+- **Hide promoted posts** - Hide promoted/sponsored posts and ads
 
 ### Avatar Menu
 
@@ -54,7 +52,7 @@ Install from [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/clean-re
 
 ### Safari
 
-Coming soon (pending approval).
+Install from the [Mac App Store](https://apps.apple.com/app/id6758573459).
 
 ## Usage
 
