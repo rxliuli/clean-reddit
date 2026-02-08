@@ -6,9 +6,9 @@ export function earn(): BasePlugin {
     description: 'Earn',
     selectors: [
       // desktop
-      '#user-drawer-content faceplate-tracker:has([href="/earn"])',
+      '#user-drawer-content [href="/earn"]:upward(faceplate-tracker)',
       // mobile
-      '#hui-user-drawer-bottom-sheet faceplate-tracker:has([href="/earn"])',
+      '#hui-user-drawer-bottom-sheet [href="/earn"]:upward(faceplate-tracker)',
     ],
   }
 }

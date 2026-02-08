@@ -5,7 +5,7 @@ export function communities(): BasePlugin {
     name: 'communities',
     description: 'Communities',
     selectors: [
-      'faceplate-expandable-section-helper:has([noun="communities_menu"])',
+      '[noun="communities_menu"]:upward(faceplate-expandable-section-helper)',
       '[name^="CommunityCreationFlow"]',
       '[name^="CommunityCreationFlow"] + hr',
     ],

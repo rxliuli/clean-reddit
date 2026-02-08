@@ -5,8 +5,7 @@ export function inc(): BasePlugin {
     name: 'inc',
     description: 'Reddit Inc',
     selectors: [
-      // 'nav>div:has(>[href="https://redditinc.com"])' // not working in query-selector-shadow-dom
-      '[aria-label="Reddit resources"] + div:has([href="https://redditinc.com"])',
+      '[href="https://redditinc.com"]:upward([aria-label="Reddit resources"] + div)',
     ],
   }
 }

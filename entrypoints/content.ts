@@ -22,10 +22,10 @@ export default defineContentScript({
       effects.forEach((it) => it())
       effects.length = 0
       let activePlugins = plugins.filter((it) => config[it.name])
-      console.log(
-        'Active Plugins:',
-        activePlugins.map((it) => it.name),
-      )
+      // console.log(
+      //   'Active Plugins:',
+      //   activePlugins.map((it) => it.name),
+      // )
       const selectors = activePlugins.map((it) => it.selectors ?? []).flat()
       const cleanup = observe(
         document.documentElement,

@@ -9,7 +9,7 @@ export function askAI(): BasePlugin {
       'hr.trailing-divider',
       '.trailing-content-container',
       // Ask AI banner on mobile banner
-      'faceplate-tracker:has([href="/answers/"])',
+      '[href="/answers/"]:upward(faceplate-tracker)',
     ],
   }
 }

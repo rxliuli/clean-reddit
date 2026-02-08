@@ -5,7 +5,7 @@ export function recommendation(): BasePlugin {
     name: 'recommendation',
     description: 'Hide recommended posts',
     selectors: [
-      'article:has(shreddit-post[recommendation-source])',
+      'shreddit-post[recommendation-source]:upward(article)',
       'article:has(shreddit-post[recommendation-source]) + hr',
     ],
   }

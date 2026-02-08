@@ -6,10 +6,10 @@ export function advertiseOnReddit(): BasePlugin {
     description: 'Advertise on Reddit',
     selectors: [
       // desktop
-      '#user-drawer-content faceplate-tracker:has([href^="https://ads.reddit.com/register"])',
+      '#user-drawer-content [href^="https://ads.reddit.com/register"]:upward(faceplate-tracker)',
       '#user-drawer-content > hr:first-of-type',
       // mobile
-      '#hui-user-drawer-bottom-sheet faceplate-tracker:has([href^="https://ads.reddit.com/register"])',
+      '#hui-user-drawer-bottom-sheet [href^="https://ads.reddit.com/register"]:upward(faceplate-tracker)',
       '#hui-user-drawer-bottom-sheet > rpl-modal-card > hr:first-of-type',
     ],
   }

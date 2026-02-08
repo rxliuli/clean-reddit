@@ -6,9 +6,9 @@ export function premium(): BasePlugin {
     description: 'Premium',
     selectors: [
       // desktop
-      '#user-drawer-content faceplate-tracker:has([href="/premium"])',
+      '#user-drawer-content [href="/premium"]:upward(faceplate-tracker)',
       // mobile
-      '#hui-user-drawer-bottom-sheet faceplate-tracker:has([href="/premium"])',
+      '#hui-user-drawer-bottom-sheet [href="/premium"]:upward(faceplate-tracker)',
     ],
   }
 }
