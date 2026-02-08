@@ -1,31 +1,46 @@
-import { type Selector, SelectorType, type AttributeSelector } from 'css-what'
+import { type Selector, SelectorType, type AttributeSelector, parse } from 'css-what'
 
 /**
  * Check if an element matches a parsed css-what AST (Selector[][]).
  * Outer array = comma-separated groups, inner array = token sequence.
+ *
+ * Returns the matched element (which may differ from `el` when `:upward()`
+ * redirects the match to an ancestor), or `null` if there is no match.
  */
-export function matches(el: Element, ast: Selector[][]): boolean {
-  return ast.some((tokens) => matchesCompound(el, tokens, tokens.length - 1))
+export function matches(el: Element, ast: Selector[][]): Element | null {
+  for (const tokens of ast) {
+    const result = matchesCompound(el, tokens, tokens.length - 1)
+    if (result) return result
+  }
+  return null
 }
 
 /**
  * Right-to-left matching of a single selector token sequence.
  * `pos` is the current index into `tokens` we need to satisfy.
+ *
+ * Returns the target element on match (may be redirected by `:upward()`),
+ * or `null` on no match.
  */
 function matchesCompound(
   el: Element,
   tokens: Selector[],
   pos: number,
-): boolean {
+): Element | null {
+  // The target element — may be changed by :upward()
+  let target: Element = el
+
   // Consume all simple selectors at current position (right-to-left)
   let i = pos
   while (i >= 0 && !isTraversal(tokens[i])) {
-    if (!matchesToken(el, tokens[i])) return false
+    const result = matchesToken(el, tokens[i])
+    if (!result) return null
+    if (result !== true) target = result
     i--
   }
 
   // All tokens consumed — full match
-  if (i < 0) return true
+  if (i < 0) return target
 
   // tokens[i] is a combinator — resolve it
   const combinator = tokens[i]
@@ -33,15 +48,15 @@ function matchesCompound(
 
   switch (combinator.type) {
     case SelectorType.Child:
-      return matchesChild(el, tokens, nextPos)
+      return matchesChild(el, tokens, nextPos) ? target : null
     case SelectorType.Descendant:
-      return matchesDescendant(el, tokens, nextPos)
+      return matchesDescendant(el, tokens, nextPos) ? target : null
     case SelectorType.Adjacent:
-      return matchesAdjacent(el, tokens, nextPos)
+      return matchesAdjacent(el, tokens, nextPos) ? target : null
     case SelectorType.Sibling:
-      return matchesSibling(el, tokens, nextPos)
+      return matchesSibling(el, tokens, nextPos) ? target : null
     default:
-      return false
+      return null
   }
 }
 
@@ -54,7 +69,7 @@ function matchesChild(
   pos: number,
 ): boolean {
   const parent = getParent(el)
-  return parent !== null && matchesCompound(parent, tokens, pos)
+  return parent !== null && matchesCompound(parent, tokens, pos) !== null
 }
 
 /** ` ` (space) — any ancestor must match, with shadow DOM traversal */
@@ -65,7 +80,7 @@ function matchesDescendant(
 ): boolean {
   let current = getParent(el)
   while (current !== null) {
-    if (matchesCompound(current, tokens, pos)) return true
+    if (matchesCompound(current, tokens, pos) !== null) return true
     current = getParent(current)
   }
   return false
@@ -78,7 +93,7 @@ function matchesAdjacent(
   pos: number,
 ): boolean {
   const prev = el.previousElementSibling
-  return prev !== null && matchesCompound(prev, tokens, pos)
+  return prev !== null && matchesCompound(prev, tokens, pos) !== null
 }
 
 /** `~` — any previous sibling must match */
@@ -89,7 +104,7 @@ function matchesSibling(
 ): boolean {
   let prev = el.previousElementSibling
   while (prev !== null) {
-    if (matchesCompound(prev, tokens, pos)) return true
+    if (matchesCompound(prev, tokens, pos) !== null) return true
     prev = prev.previousElementSibling
   }
   return false
@@ -97,7 +112,11 @@ function matchesSibling(
 
 // --- Single token matching ---
 
-function matchesToken(el: Element, token: Selector): boolean {
+/**
+ * Match a single token. Returns `true` for a normal match, an `Element`
+ * when `:upward()` redirects the target, or `false` for no match.
+ */
+function matchesToken(el: Element, token: Selector): boolean | Element {
   switch (token.type) {
     case SelectorType.Tag:
       return el.localName === token.name.toLowerCase()
@@ -157,14 +176,14 @@ function matchesAttribute(el: Element, token: AttributeSelector): boolean {
 function matchesPseudo(
   el: Element,
   token: { name: string; data: Selector[][] | string | null },
-): boolean {
+): boolean | Element {
   switch (token.name) {
     case 'not':
       return Array.isArray(token.data) && !matches(el, token.data)
     case 'is':
     case 'matches':
     case 'where':
-      return Array.isArray(token.data) && matches(el, token.data)
+      return Array.isArray(token.data) && matches(el, token.data) !== null
     case 'has':
       return (
         Array.isArray(token.data) &&
@@ -172,6 +191,26 @@ function matchesPseudo(
           matches(child, token.data as Selector[][]),
         )
       )
+    case 'upward': {
+      if (typeof token.data !== 'string') return false
+      const n = parseInt(token.data, 10)
+      if (!isNaN(n) && n > 0) {
+        // Numeric: walk up N levels
+        let ancestor: Element | null = el
+        for (let step = 0; step < n && ancestor; step++) {
+          ancestor = getParent(ancestor)
+        }
+        return ancestor ?? false
+      }
+      // CSS selector: find closest matching ancestor
+      const selectorAst = parse(token.data)
+      let ancestor: Element | null = getParent(el)
+      while (ancestor) {
+        if (matches(ancestor, selectorAst)) return ancestor
+        ancestor = getParent(ancestor)
+      }
+      return false
+    }
     case 'first-child':
       return el.previousElementSibling === null
     case 'last-child':
@@ -203,14 +242,17 @@ function matchesPseudo(
     case 'has-text': {
       if (typeof token.data !== 'string') return false
       const text = el.textContent ?? ''
-      if (token.data.startsWith('/')) {
-        const end = token.data.lastIndexOf('/')
-        const pattern = token.data.slice(1, end)
-        const flags = token.data.slice(end + 1)
-        return new RegExp(pattern, flags).test(text)
-      }
-      const literal = token.data.replace(/^["']|["']$/g, '')
-      return text.includes(literal)
+      const pattern = token.data.replace(/^["']|["']$/g, '')
+      return matchesTextOrRegex(pattern, text)
+    }
+    case 'matches-media': {
+      if (typeof token.data !== 'string') return false
+      return window.matchMedia(token.data).matches
+    }
+    case 'matches-path': {
+      if (typeof token.data !== 'string') return false
+      const path = location.pathname + location.search
+      return matchesTextOrRegex(token.data, path)
     }
     default:
       return false
@@ -218,6 +260,19 @@ function matchesPseudo(
 }
 
 // --- Utilities ---
+
+/** Match text against a literal string or /regex/flags pattern */
+function matchesTextOrRegex(pattern: string, text: string): boolean {
+  if (pattern.startsWith('/')) {
+    const end = pattern.lastIndexOf('/')
+    if (end > 0) {
+      const re = pattern.slice(1, end)
+      const flags = pattern.slice(end + 1)
+      return new RegExp(re, flags).test(text)
+    }
+  }
+  return text.includes(pattern)
+}
 
 function isTraversal(token: Selector): boolean {
   return (

@@ -30,13 +30,23 @@ export default defineContentScript({
       const cleanup = observe(
         document.documentElement,
         selectors.join(','),
-        (elements) => {
-          elements.forEach((element) => {
-            if (element instanceof HTMLElement) {
-              element.style.display = 'none'
-              element.setAttribute('clean-reddit', 'true')
-            }
-          })
+        {
+          onMatch: (elements) => {
+            elements.forEach((element) => {
+              if (element instanceof HTMLElement) {
+                element.style.display = 'none'
+                element.setAttribute('clean-reddit', 'true')
+              }
+            })
+          },
+          onUnmatch: (elements) => {
+            elements.forEach((element) => {
+              if (element instanceof HTMLElement) {
+                element.style.display = ''
+                element.removeAttribute('clean-reddit')
+              }
+            })
+          },
         },
       )
       effects.push(cleanup)

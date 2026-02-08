@@ -203,6 +203,89 @@ describe('observe', () => {
     })
   })
 
+  describe('conditional selectors', () => {
+    it('should match elements with :matches-media when condition is true', () => {
+      container.innerHTML = '<div class="target"></div>'
+      const cb = vi.fn()
+      cleanup = observe(container, '.target:matches-media(all)', cb)
+
+      expect(cb).toHaveBeenCalledTimes(1)
+      expect(cb).toHaveBeenCalledWith([container.querySelector('.target')])
+    })
+
+    it('should not match elements with :matches-media when condition is false', () => {
+      container.innerHTML = '<div class="target"></div>'
+      const cb = vi.fn()
+      cleanup = observe(container, '.target:matches-media(print)', cb)
+
+      expect(cb).not.toHaveBeenCalled()
+    })
+
+    it('should match elements with :matches-path when path matches', () => {
+      container.innerHTML = '<div class="target"></div>'
+      const cb = vi.fn()
+      // Use regex that matches any path
+      cleanup = observe(container, '.target:matches-path(/.*/)', cb)
+
+      expect(cb).toHaveBeenCalledTimes(1)
+      expect(cb).toHaveBeenCalledWith([container.querySelector('.target')])
+    })
+
+    it('should not match elements with :matches-path when path does not match', () => {
+      container.innerHTML = '<div class="target"></div>'
+      const cb = vi.fn()
+      cleanup = observe(container, '.target:matches-path(/^NOMATCH$/)', cb)
+
+      expect(cb).not.toHaveBeenCalled()
+    })
+
+    it('should support onUnmatch callback via options object', () => {
+      container.innerHTML = '<div class="target"></div>'
+      const onMatch = vi.fn()
+      const onUnmatch = vi.fn()
+      cleanup = observe(container, '.target:matches-media(all)', { onMatch, onUnmatch })
+
+      expect(onMatch).toHaveBeenCalledTimes(1)
+      expect(onUnmatch).not.toHaveBeenCalled()
+    })
+
+    it('should handle mixed conditional and unconditional selectors', () => {
+      container.innerHTML = '<div class="always"></div><div class="conditional"></div>'
+      const cb = vi.fn()
+      cleanup = observe(container, '.always, .conditional:matches-media(all)', cb)
+
+      expect(cb).toHaveBeenCalledTimes(1)
+      // Both elements should be matched
+      const matched = cb.mock.calls[0][0] as Element[]
+      expect(matched).toHaveLength(2)
+    })
+
+    it('should re-evaluate conditional selectors on path change', async () => {
+      container.innerHTML = '<div class="target"></div>'
+      const onMatch = vi.fn()
+      const onUnmatch = vi.fn()
+      // Use a path pattern that doesn't match current path
+      cleanup = observe(container, '.target:matches-path(/^\/test-nav-path$/)', { onMatch, onUnmatch })
+
+      expect(onMatch).not.toHaveBeenCalled()
+
+      // Simulate navigation to the matching path
+      history.pushState(null, '', '/test-nav-path')
+
+      // Wait a tick for the navigation listener to fire
+      await new Promise<void>((resolve) => setTimeout(resolve, 50))
+
+      expect(onMatch).toHaveBeenCalledTimes(1)
+
+      // Navigate away
+      history.pushState(null, '', '/')
+
+      await new Promise<void>((resolve) => setTimeout(resolve, 50))
+
+      expect(onUnmatch).toHaveBeenCalledTimes(1)
+    })
+  })
+
   describe('cleanup', () => {
     it('should stop observing after cleanup', async () => {
       const cb = vi.fn()
