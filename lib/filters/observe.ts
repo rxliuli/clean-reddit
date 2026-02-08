@@ -9,10 +9,9 @@ export interface ObserveOptions {
 export function observe(
   root: Element,
   selector: string,
-  cbOrOptions: ((matched: Element[]) => void) | ObserveOptions,
+  options: ObserveOptions,
 ): () => void {
-  const onMatch = typeof cbOrOptions === 'function' ? cbOrOptions : cbOrOptions.onMatch
-  const onUnmatch = typeof cbOrOptions === 'function' ? undefined : cbOrOptions.onUnmatch
+  const { onMatch, onUnmatch } = options
 
   const ast = parse(selector)
   const unconditionalAst: Selector[][] = []

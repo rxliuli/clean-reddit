@@ -22,14 +22,15 @@ Returns the first matching element, or `null`.
 const el = querySelector(document.body, '#sidebar .widget:upward(1)')
 ```
 
-### `observe(root, selector, callback | options)`
+### `observe(root, selector, options)`
 
 Watches `root` for matching elements — both existing and dynamically added. Returns a cleanup function.
 
 ```ts
-// Simple callback
-const cleanup = observe(document.body, '.ad-banner', (elements) => {
-  elements.forEach((el) => el.remove())
+const cleanup = observe(document.body, '.ad-banner', {
+  onMatch: (elements) => {
+    elements.forEach((el) => el.remove())
+  },
 })
 
 // With onUnmatch (for conditional selectors)
