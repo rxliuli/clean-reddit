@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { parse } from 'css-what'
-import { matches } from './matches'
+import { matches, validateSelector } from './matches'
 
 describe('matches', () => {
   let container: HTMLElement
@@ -542,5 +542,42 @@ describe('matches', () => {
       expect(matches(container.children[0] as Element, parse('article:has-text("Promoted")'))).toBeTruthy()
       expect(matches(container.children[1] as Element, parse('article:has-text("Promoted")'))).toBeFalsy()
     })
+  })
+})
+
+describe('validateSelector', () => {
+  it('should accept :upward() as terminal operation', () => {
+    expect(() => validateSelector(parse('.child:upward(2)'))).not.toThrow()
+    expect(() => validateSelector(parse('.child:upward(article)'))).not.toThrow()
+    expect(() => validateSelector(parse('[noun="menu"]:upward(section)'))).not.toThrow()
+  })
+
+  it('should throw when :upward() is followed by adjacent sibling combinator', () => {
+    expect(() => validateSelector(parse('.child:upward(section) + hr'))).toThrow(':upward()')
+  })
+
+  it('should throw when :upward() is followed by general sibling combinator', () => {
+    expect(() => validateSelector(parse('.child:upward(section) ~ hr'))).toThrow(':upward()')
+  })
+
+  it('should throw when :upward() is followed by child combinator', () => {
+    expect(() => validateSelector(parse('.child:upward(section) > div'))).toThrow(':upward()')
+  })
+
+  it('should throw when :upward() is followed by descendant combinator', () => {
+    expect(() => validateSelector(parse('.child:upward(section) div'))).toThrow(':upward()')
+  })
+
+  it('should accept :upward() with combinators inside its argument', () => {
+    // The + here is inside the :upward() argument, not after it
+    expect(() => validateSelector(parse('[href="x"]:upward([aria-label="y"] + div)'))).not.toThrow()
+  })
+
+  it('should accept comma-separated selectors where :upward() is terminal in each group', () => {
+    expect(() => validateSelector(parse('.a:upward(div), .b:upward(span)'))).not.toThrow()
+  })
+
+  it('should throw if any group has non-terminal :upward()', () => {
+    expect(() => validateSelector(parse('.a:upward(div), .b:upward(span) + hr'))).toThrow(':upward()')
   })
 })

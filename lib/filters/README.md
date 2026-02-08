@@ -84,16 +84,18 @@ Behavior:
 | Selector | Description |
 | --- | --- |
 | `:has-text(text)` | Matches if the element's `textContent` contains `text`. Supports regex: `:has-text(/pattern/flags)`. |
-| `:upward(n)` | Returns the ancestor `n` levels above the matched element. |
-| `:upward(selector)` | Returns the closest ancestor matching `selector`. |
+| `:upward(n)` | Returns the ancestor `n` levels above the matched element. **Must be terminal** (see below). |
+| `:upward(selector)` | Returns the closest ancestor matching `selector`. **Must be terminal** (see below). |
 | `:matches-media(query)` | Matches only when the media query is true. Re-evaluated on viewport changes. |
 | `:matches-path(path)` | Matches only when `location.pathname + location.search` contains `path`. Supports regex. Re-evaluated on SPA navigation. |
 
 `:matches-media` and `:matches-path` are **conditional** — `observe()` automatically re-evaluates them when the environment changes and fires `onUnmatch` when they stop matching.
 
+**`:upward()` must be terminal** — it cannot be followed by a combinator (`+`, `~`, `>`, or descendant space). The matching engine evaluates selectors right-to-left, so `:upward()` can only redirect the final match target. Selectors like `.child:upward(section) + hr` will throw an error at parse time. Use `:has()` instead for sibling selectors: `section:has(.child) + hr`.
+
 ## Architecture
 
-```
+```txt
 index.ts          Public API re-exports
     │
     ├── query.ts      querySelectorAll / querySelector

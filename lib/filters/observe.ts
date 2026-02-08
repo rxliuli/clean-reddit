@@ -1,5 +1,5 @@
 import { type Selector, SelectorType, parse } from 'css-what'
-import { matches } from './matches'
+import { matches, validateSelector } from './matches'
 
 export interface ObserveOptions {
   onMatch: (elements: Element[]) => void
@@ -14,6 +14,7 @@ export function observe(
   const { onMatch, onUnmatch } = options
 
   const ast = parse(selector)
+  validateSelector(ast)
   const unconditionalAst: Selector[][] = []
   const conditionalAst: Selector[][] = []
   for (const group of ast) {

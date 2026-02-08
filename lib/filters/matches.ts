@@ -1,6 +1,34 @@
 import { type Selector, SelectorType, type AttributeSelector, parse } from 'css-what'
 
 /**
+ * Validate that `:upward()` is only used as a terminal operation in each
+ * selector group.  `:upward()` redirects the match target to an ancestor,
+ * which is incompatible with subsequent combinators (`+`, `~`, `>`, ` `)
+ * because the right-to-left matching engine cannot resolve sibling/parent
+ * relationships from the redirected element.
+ *
+ * Throws if any group contains `:upward()` followed by a combinator.
+ */
+export function validateSelector(ast: Selector[][]): void {
+  for (const tokens of ast) {
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i]
+      if (
+        token.type === SelectorType.Pseudo &&
+        token.name === 'upward' &&
+        i + 1 < tokens.length &&
+        isTraversal(tokens[i + 1])
+      ) {
+        throw new Error(
+          ':upward() must be the last part of a selector — it cannot be followed by a combinator (e.g. +, ~, >, or descendant). ' +
+          'Use :has() instead for sibling selectors.',
+        )
+      }
+    }
+  }
+}
+
+/**
  * Check if an element matches a parsed css-what AST (Selector[][]).
  * Outer array = comma-separated groups, inner array = token sequence.
  *
