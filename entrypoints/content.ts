@@ -1,4 +1,4 @@
-import { getConfig } from '@/lib/config'
+import { getConfig, onChange } from '@/lib/config'
 import { observe, querySelectorAll } from '@/lib/filters'
 import { plugins } from '@/lib/plugins'
 
@@ -27,38 +27,32 @@ export default defineContentScript({
       //   activePlugins.map((it) => it.name),
       // )
       const selectors = activePlugins.map((it) => it.selectors ?? []).flat()
-      const cleanup = observe(
-        document.documentElement,
-        selectors.join(','),
-        {
-          onMatch: (elements) => {
-            elements.forEach((element) => {
-              if (element instanceof HTMLElement) {
-                element.style.display = 'none'
-                element.setAttribute('clean-reddit', 'true')
-              }
-            })
-          },
-          onUnmatch: (elements) => {
-            elements.forEach((element) => {
-              if (element instanceof HTMLElement) {
-                element.style.display = ''
-                element.removeAttribute('clean-reddit')
-              }
-            })
-          },
+      const cleanup = observe(document.documentElement, selectors.join(','), {
+        onMatch: (elements) => {
+          elements.forEach((element) => {
+            if (element instanceof HTMLElement) {
+              element.style.display = 'none'
+              element.setAttribute('clean-reddit', 'true')
+            }
+          })
         },
-      )
+        onUnmatch: (elements) => {
+          elements.forEach((element) => {
+            if (element instanceof HTMLElement) {
+              element.style.display = ''
+              element.removeAttribute('clean-reddit')
+            }
+          })
+        },
+      })
       effects.push(cleanup)
     }
 
     activePlugins()
 
-    browser.storage.sync.onChanged.addListener(async (changes) => {
-      if (changes.config) {
-        config = changes.config.newValue as Record<string, boolean>
-        activePlugins()
-      }
+    onChange((newConfig) => {
+      config = newConfig
+      activePlugins()
     })
   },
 })
