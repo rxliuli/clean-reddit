@@ -29,9 +29,9 @@ Clean Reddit allows you to hide various UI elements across different sections of
 
 ### Content Feed
 
-- **Hide recommended posts** - Hide all recommended posts (popular, suggested, interest-based, etc.)
-- **Hide promoted posts** - Hide promoted/sponsored posts and ads
-- **Hide related answers** - Hide the Related Answers section
+- **recommended posts** - Hide all recommended posts (popular, suggested, interest-based, etc.)
+- **promoted posts** - Hide promoted/sponsored posts and ads
+- **related answers** - Hide the Related Answers section
 
 ### Avatar Menu
 
