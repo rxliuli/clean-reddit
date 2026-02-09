@@ -3,7 +3,7 @@ import { BasePlugin } from '../type'
 export function recommendation(): BasePlugin {
   return {
     name: 'recommendation',
-    description: 'Hide recommended posts',
+    description: 'Recommended posts',
     selectors: [
       'shreddit-post[recommendation-source]:upward(article)',
       'article:has(shreddit-post[recommendation-source]) + hr',

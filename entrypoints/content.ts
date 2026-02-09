@@ -21,7 +21,7 @@ export default defineContentScript({
       })
       effects.forEach((it) => it())
       effects.length = 0
-      let activePlugins = plugins.filter((it) => config[it.name])
+      let activePlugins = plugins.filter((it) => !config[it.name])
       // console.log(
       //   'Active Plugins:',
       //   activePlugins.map((it) => it.name),
