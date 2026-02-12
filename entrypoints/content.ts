@@ -27,25 +27,32 @@ export default defineContentScript({
       //   activePlugins.map((it) => it.name),
       // )
       const selectors = activePlugins.map((it) => it.selectors ?? []).flat()
-      const cleanup = observe(document.documentElement, selectors.join(','), {
-        onMatch: (elements) => {
-          elements.forEach((element) => {
-            if (element instanceof HTMLElement) {
-              element.style.display = 'none'
-              element.setAttribute('clean-reddit', 'true')
-            }
-          })
-        },
-        onUnmatch: (elements) => {
-          elements.forEach((element) => {
-            if (element instanceof HTMLElement) {
-              element.style.display = ''
-              element.removeAttribute('clean-reddit')
-            }
-          })
-        },
-      })
-      effects.push(cleanup)
+      if (selectors.length > 0) {
+        const cleanup = observe(document.documentElement, selectors.join(','), {
+          onMatch: (elements) => {
+            elements.forEach((element) => {
+              if (element instanceof HTMLElement) {
+                element.style.display = 'none'
+                element.setAttribute('clean-reddit', 'true')
+              }
+            })
+          },
+          onUnmatch: (elements) => {
+            elements.forEach((element) => {
+              if (element instanceof HTMLElement) {
+                element.style.display = ''
+                element.removeAttribute('clean-reddit')
+              }
+            })
+          },
+        })
+        effects.push(cleanup)
+      }
+      for (const plugin of activePlugins) {
+        if (plugin.effect) {
+          effects.push(plugin.effect())
+        }
+      }
     }
 
     activePlugins()
