@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { FaDiscord } from 'react-icons/fa'
+import { Store } from 'lucide-react'
 import {
   Accordion,
   AccordionContent,
@@ -68,15 +69,26 @@ export function App() {
     <div className="w-full min-w-80 p-4">
       <div className="flex items-center justify-between mb-2">
         <h1 className="text-lg font-semibold">Clean Reddit</h1>
-        <a
-          href="https://discord.gg/Cwre8EwkNX"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-muted-foreground hover:text-foreground transition-colors"
-          title="Join our Discord"
-        >
-          <FaDiscord size={20} />
-        </a>
+        <div className="flex items-center gap-2">
+          <a
+            href="https://store.rxliuli.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+            title="More Extensions"
+          >
+            <Store size={20} />
+          </a>
+          <a
+            href="https://discord.gg/Cwre8EwkNX"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+            title="Join our Discord"
+          >
+            <FaDiscord size={20} />
+          </a>
+        </div>
       </div>
       <Accordion type="single" collapsible defaultValue="left">
         {(Object.keys(pluginGroups) as (keyof typeof pluginGroups)[]).map(
