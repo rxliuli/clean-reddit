@@ -3,6 +3,7 @@ import { promoted } from './promoted'
 import { relatedAnswers } from './related-answers'
 import { xpromoBottomSheet } from './xpromo-bottom-sheet'
 import { searchAnswers } from './search-answers'
+import { communityRecommendations } from './community-recommendations'
 
 export const contentPlugins = [
   recommendation(),
@@ -10,4 +11,5 @@ export const contentPlugins = [
   relatedAnswers(),
   xpromoBottomSheet(),
   searchAnswers(),
+  communityRecommendations(),
 ]
