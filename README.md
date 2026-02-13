@@ -10,6 +10,7 @@ Clean Reddit allows you to hide various UI elements across different sections of
 
 - **Home button** - Hide the home navigation button
 - **Games on Reddit** - Hide the games section
+- **Moderation** - Hide the moderation section
 - **Feeds** - Hide custom feeds
 - **Recent Communities** - Hide recently visited communities
 - **Communities** - Hide the communities section
@@ -26,13 +27,16 @@ Clean Reddit allows you to hide various UI elements across different sections of
 - **Leading icon** - Hide the leading icon
 - **Ask AI** - Hide the Ask AI banner in search
 - **Advertise button** - Hide the advertise button
+- **Trending searches** - Hide trending searches in the search dropdown
 
 ### Content Feed
 
-- **recommended posts** - Hide all recommended posts (popular, suggested, interest-based, etc.)
-- **promoted posts** - Hide promoted/sponsored posts and ads
-- **related answers** - Hide the Related Answers section
-- **app promotion bottom sheet** - Hide the app promotion bottom sheet and restore scrolling
+- **Recommended posts** - Hide all recommended posts (popular, suggested, interest-based, etc.)
+- **Promoted posts** - Hide promoted/sponsored posts and ads
+- **Related Answers** - Hide the Related Answers section
+- **App promotion bottom sheet** - Hide the app promotion bottom sheet and restore scrolling
+- **Search Answers** - Hide the Answers section in search results
+- **Community Recommendations** - Hide related communities section in feed
 
 ### Avatar Menu
 
