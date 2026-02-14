@@ -11,6 +11,7 @@ import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { pluginGroups } from '@/lib/plugins'
 import { getConfig, setConfig } from '@/lib/config'
+import { messager } from '@/lib/message'
 import { BasePlugin } from '@/lib/plugins/type'
 
 const groupLabels: Record<keyof typeof pluginGroups, string> = {
@@ -55,6 +56,10 @@ export function App() {
     const newConfig = { ...config, [pluginName]: enabled }
     setConfigState(newConfig)
     await setConfig(newConfig)
+    const tabs = await browser.tabs.query({ currentWindow: true, active: true })
+    if (tabs[0]) {
+      await messager.sendMessage('configChanged', newConfig, tabs[0].id)
+    }
   }
 
   if (loading) {

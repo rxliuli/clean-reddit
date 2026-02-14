@@ -1,3 +1,4 @@
+import { messager } from './message'
 import { plugins } from './plugins'
 import { communities } from './plugins/left/communities'
 import { BasePlugin } from './plugins/type'
@@ -33,10 +34,7 @@ export async function setConfig(config: Partial<Record<string, boolean>>) {
 }
 
 export function onChange(callback: (config: Record<string, boolean>) => void) {
-  browser.storage.sync.onChanged.addListener(async (changes) => {
-    if (changes[configKey]) {
-      const newConfig = changes[configKey].newValue as Record<string, boolean>
-      callback(newConfig)
-    }
+  messager.onMessage('configChanged', (ev) => {
+    callback(ev.data)
   })
 }

@@ -32,7 +32,7 @@ export function xpromoBottomSheet(): BasePlugin {
           cleanBody()
         }
       })
-      bodyObserver.observe(document.body, {
+      bodyObserver.observe(document.documentElement, {
         attributes: true,
         attributeFilter: ['style'],
       })
