@@ -19,7 +19,11 @@ Clean Reddit allows you to hide various UI elements across different sections of
 
 ### Right Sidebar
 
-- **Right sidebar** - Hide the entire right sidebar and legal links
+- **Home sidebar** - Hide the right sidebar on the homepage (Recent Posts)
+- **Community sidebar** - Hide the right sidebar on community pages
+- **Post sidebar** - Hide the right sidebar on post pages
+- **User sidebar** - Hide the right sidebar on user profile pages
+- **Legal links** - Hide the legal links at the bottom of the sidebar
 
 ### Top Navigation
 

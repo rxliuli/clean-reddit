@@ -284,6 +284,39 @@ describe('observe', () => {
 
       expect(onUnmatch).toHaveBeenCalledTimes(1)
     })
+
+    it('should detect path changes via polling in content script world', async () => {
+      // Simulate content script isolated world
+      const g = globalThis as Record<string, unknown>
+      g.browser = {}
+
+      try {
+        container.innerHTML = '<div class="target"></div>'
+        const onMatch = vi.fn()
+        const onUnmatch = vi.fn()
+        cleanup = observe(container, '.target:matches-path(/^\/test-poll-path$/)', { onMatch, onUnmatch })
+
+        expect(onMatch).not.toHaveBeenCalled()
+
+        // Change URL — no monkey-patch fires, polling must detect it
+        const origPush = history.pushState.bind(history)
+        origPush(null, '', '/test-poll-path')
+
+        // Wait for poll interval (200ms) + buffer
+        await new Promise<void>((resolve) => setTimeout(resolve, 300))
+
+        expect(onMatch).toHaveBeenCalledTimes(1)
+
+        // Navigate away
+        origPush(null, '', '/')
+
+        await new Promise<void>((resolve) => setTimeout(resolve, 300))
+
+        expect(onUnmatch).toHaveBeenCalledTimes(1)
+      } finally {
+        delete g.browser
+      }
+    })
   })
 
   describe('cleanup', () => {

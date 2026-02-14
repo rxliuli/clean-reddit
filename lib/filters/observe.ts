@@ -310,24 +310,53 @@ const navListeners = new Set<NavigationCallback>()
 let navInstalled = false
 let origPushState: typeof history.pushState | null = null
 let origReplaceState: typeof history.replaceState | null = null
+let pollId: ReturnType<typeof setInterval> | null = null
+let lastHref: string = ''
 
 function navNotify() {
   for (const cb of navListeners) cb()
 }
 
+/**
+ * In a content script's isolated world, monkey-patching history.pushState
+ * does not intercept the page's calls. Detect this by checking for the
+ * browser/chrome.runtime extension APIs which are only available in the
+ * content script world, not the main world.
+ */
+function isContentScriptWorld(): boolean {
+  const g = globalThis as Record<string, unknown>
+  return (
+    typeof g.browser !== 'undefined' ||
+    typeof (g.chrome as Record<string, unknown> | undefined)?.runtime === 'object'
+  )
+}
+
 function installNavListeners() {
   if (navInstalled) return
   navInstalled = true
-  origPushState = history.pushState.bind(history)
-  origReplaceState = history.replaceState.bind(history)
 
-  history.pushState = function (...args: Parameters<typeof history.pushState>) {
-    origPushState!(...args)
-    navNotify()
-  }
-  history.replaceState = function (...args: Parameters<typeof history.replaceState>) {
-    origReplaceState!(...args)
-    navNotify()
+  if (isContentScriptWorld()) {
+    // Isolated world: poll location.href for changes
+    lastHref = location.href
+    pollId = setInterval(() => {
+      if (location.href !== lastHref) {
+        lastHref = location.href
+        navNotify()
+      }
+    }, 200)
+  } else {
+    // Main world: monkey-patch history methods
+    origPushState = history.pushState.bind(history)
+    origReplaceState = history.replaceState.bind(history)
+
+    history.pushState = function (...args: Parameters<typeof history.pushState>) {
+      origPushState!(...args)
+      navNotify()
+    }
+    history.replaceState = function (...args: Parameters<typeof history.replaceState>) {
+      origReplaceState!(...args)
+      navNotify()
+    }
   }
 
   window.addEventListener('popstate', navNotify)
@@ -336,10 +365,16 @@ function installNavListeners() {
 function uninstallNavListeners() {
   if (!navInstalled) return
   navInstalled = false
+
+  if (pollId !== null) {
+    clearInterval(pollId)
+    pollId = null
+  }
   if (origPushState) history.pushState = origPushState
   if (origReplaceState) history.replaceState = origReplaceState
   origPushState = null
   origReplaceState = null
+
   window.removeEventListener('popstate', navNotify)
 }
 
