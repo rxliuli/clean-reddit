@@ -6,7 +6,8 @@ export function recommendation(): BasePlugin {
     description: 'Recommended posts',
     selectors: [
       'shreddit-post[recommendation-source]:upward(article)',
-      'article:has(shreddit-post[recommendation-source]) + hr',
+      // 'article:has(shreddit-post[recommendation-source]) + hr',
     ],
+    hideMode: 'collapse',
   }
 }

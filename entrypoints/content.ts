@@ -9,14 +9,41 @@ export default defineContentScript({
     let config = await getConfig()
 
     const effects: (() => void)[] = []
+    const hideElement = (element: HTMLElement) => {
+      element.style.display = 'none'
+      element.setAttribute('clean-reddit', 'true')
+    }
+    const collapseElement = (element: HTMLElement) => {
+      element.style.visibility = 'hidden'
+      element.style.height = '1px'
+      element.style.overflow = 'hidden'
+      element.style.margin = '0'
+      element.style.padding = '0'
+      element.style.pointerEvents = 'none'
+      element.setAttribute('clean-reddit', 'collapse')
+    }
+    const restoreElement = (element: HTMLElement) => {
+      const mode = element.getAttribute('clean-reddit')
+      if (mode === 'collapse') {
+        element.style.visibility = ''
+        element.style.height = ''
+        element.style.overflow = ''
+        element.style.margin = ''
+        element.style.padding = ''
+        element.style.pointerEvents = ''
+      } else {
+        element.style.display = ''
+      }
+      element.removeAttribute('clean-reddit')
+    }
+
     const activePlugins = () => {
       querySelectorAll(
         document.documentElement,
-        '[clean-reddit="true"]',
+        '[clean-reddit]',
       ).forEach((el) => {
         if (el instanceof HTMLElement) {
-          el.style.display = ''
-          el.removeAttribute('clean-reddit')
+          restoreElement(el)
         }
       })
       effects.forEach((it) => it())
@@ -26,28 +53,65 @@ export default defineContentScript({
       //   'Active Plugins:',
       //   activePlugins.map((it) => it.name),
       // )
-      const selectors = activePlugins.map((it) => it.selectors ?? []).flat()
-      if (selectors.length > 0) {
-        const cleanup = observe(document.documentElement, selectors.join(','), {
-          onMatch: (elements) => {
-            elements.forEach((element) => {
-              if (element instanceof HTMLElement) {
-                element.style.display = 'none'
-                element.setAttribute('clean-reddit', 'true')
-              }
-            })
+      const defaultPlugins = activePlugins.filter((it) => !it.hideMode)
+      const collapsePlugins = activePlugins.filter(
+        (it) => it.hideMode === 'collapse',
+      )
+
+      const defaultSelectors = defaultPlugins
+        .map((it) => it.selectors ?? [])
+        .flat()
+      if (defaultSelectors.length > 0) {
+        const cleanup = observe(
+          document.documentElement,
+          defaultSelectors.join(','),
+          {
+            onMatch: (elements) => {
+              elements.forEach((element) => {
+                if (element instanceof HTMLElement) {
+                  hideElement(element)
+                }
+              })
+            },
+            onUnmatch: (elements) => {
+              elements.forEach((element) => {
+                if (element instanceof HTMLElement) {
+                  restoreElement(element)
+                }
+              })
+            },
           },
-          onUnmatch: (elements) => {
-            elements.forEach((element) => {
-              if (element instanceof HTMLElement) {
-                element.style.display = ''
-                element.removeAttribute('clean-reddit')
-              }
-            })
-          },
-        })
+        )
         effects.push(cleanup)
       }
+
+      const collapseSelectors = collapsePlugins
+        .map((it) => it.selectors ?? [])
+        .flat()
+      if (collapseSelectors.length > 0) {
+        const cleanup = observe(
+          document.documentElement,
+          collapseSelectors.join(','),
+          {
+            onMatch: (elements) => {
+              elements.forEach((element) => {
+                if (element instanceof HTMLElement) {
+                  collapseElement(element)
+                }
+              })
+            },
+            onUnmatch: (elements) => {
+              elements.forEach((element) => {
+                if (element instanceof HTMLElement) {
+                  restoreElement(element)
+                }
+              })
+            },
+          },
+        )
+        effects.push(cleanup)
+      }
+
       for (const plugin of activePlugins) {
         if (plugin.effect) {
           effects.push(plugin.effect())

@@ -3,4 +3,5 @@ export interface BasePlugin {
   description: string
   selectors?: string[]
   effect?: () => () => void
+  hideMode?: 'collapse'
 }
