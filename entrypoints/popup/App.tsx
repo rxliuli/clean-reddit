@@ -85,7 +85,7 @@ export function App() {
             <Store size={20} />
           </a>
           <a
-            href="https://discord.gg/Cwre8EwkNX"
+            href="https://discord.gg/gFhKUthc88"
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-foreground transition-colors"

@@ -106,7 +106,7 @@ pnpm build:safari
 
 ## Community
 
-Join our [Discord](https://discord.gg/Cwre8EwkNX) for support and discussions.
+Join our [Discord](https://discord.gg/gFhKUthc88) for support and discussions.
 
 ## License
 
