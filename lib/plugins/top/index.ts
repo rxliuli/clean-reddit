@@ -3,6 +3,7 @@ import { leadingIcon } from './leading-icon'
 import { askAI } from './ask-ai'
 import { advertise } from './advertise'
 import { searchTrending } from './search-trending'
+import { searchTrendingCommunities } from './search-trending-communities'
 
 export const topPlugins = [
   navDot(),
@@ -10,4 +11,5 @@ export const topPlugins = [
   askAI(),
   advertise(),
   searchTrending(),
+  searchTrendingCommunities(),
 ]
