@@ -3,7 +3,7 @@ import { BasePlugin } from '../type'
 export function advertiseOnReddit(): BasePlugin {
   return {
     name: 'advertise-on-reddit',
-    description: 'Advertise on Reddit',
+    description: 'Advertise on Reddit (avatar menu)',
     selectors: [
       // desktop
       '#user-drawer-content [href^="https://ads.reddit.com/register"]:upward(faceplate-tracker)',

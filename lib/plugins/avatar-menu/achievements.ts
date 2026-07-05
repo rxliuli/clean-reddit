@@ -3,7 +3,7 @@ import { BasePlugin } from '../type'
 export function achievements(): BasePlugin {
   return {
     name: 'achievements',
-    description: 'Achievements',
+    description: 'Achievements (avatar menu)',
     selectors: [
       // desktop
       '#user-drawer-content [href^="/user/"][href$="/achievements"]:upward(faceplate-tracker)',

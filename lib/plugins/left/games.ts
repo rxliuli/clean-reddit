@@ -4,7 +4,7 @@ import { BasePlugin } from '../type'
 export function games(): BasePlugin {
   return {
     name: 'games',
-    description: 'Games on Reddit',
+    description: 'Games on Reddit (left sidebar)',
     selectors: ['[noun="games_drawer"]', '[noun="games_drawer"] + hr'],
   }
 }

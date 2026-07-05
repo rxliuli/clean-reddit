@@ -3,7 +3,7 @@ import { BasePlugin } from '../type'
 export function tryRedditPro(): BasePlugin {
   return {
     name: 'try-reddit-pro',
-    description: 'Try Reddit Pro',
+    description: 'Try Reddit Pro (avatar menu)',
     selectors: [
       // desktop
       '#user-drawer-content [href^="/reddit-pro"]:upward(faceplate-tracker)',

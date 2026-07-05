@@ -3,7 +3,7 @@ import { BasePlugin } from '../type'
 export function earn(): BasePlugin {
   return {
     name: 'earn',
-    description: 'Earn',
+    description: 'Earn (avatar menu)',
     selectors: [
       // desktop
       '#user-drawer-content [href="/earn"]:upward(faceplate-tracker)',

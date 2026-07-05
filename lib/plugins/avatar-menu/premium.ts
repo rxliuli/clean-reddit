@@ -3,7 +3,7 @@ import { BasePlugin } from '../type'
 export function premium(): BasePlugin {
   return {
     name: 'premium',
-    description: 'Premium',
+    description: 'Premium (avatar menu)',
     selectors: [
       // desktop
       '#user-drawer-content [href="/premium"]:upward(faceplate-tracker)',

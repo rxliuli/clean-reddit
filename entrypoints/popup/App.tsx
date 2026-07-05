@@ -15,11 +15,13 @@ import { messager } from '@/lib/message'
 import { BasePlugin } from '@/lib/plugins/type'
 
 const groupLabels: Record<keyof typeof pluginGroups, string> = {
+  ads: 'Ads & Promotions',
+  ai: 'AI Features',
+  recommendations: 'Recommendations & Trending',
+  gamification: 'Gamification',
+  top: 'Top Navigation',
   left: 'Left Sidebar',
   right: 'Right Sidebar',
-  top: 'Top Navigation',
-  content: 'Content Feed',
-  avatarMenu: 'Avatar Menu',
 }
 
 function PluginSwitch({
@@ -95,7 +97,7 @@ export function App() {
           </a>
         </div>
       </div>
-      <Accordion type="single" collapsible defaultValue="left">
+      <Accordion type="single" collapsible defaultValue="ads">
         {(Object.keys(pluginGroups) as (keyof typeof pluginGroups)[]).map(
           (groupKey) => (
             <AccordionItem key={groupKey} value={groupKey}>
