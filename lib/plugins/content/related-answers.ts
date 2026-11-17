@@ -1,4 +1,4 @@
-import { BasePlugin } from '../type'
+import type { BasePlugin } from '../type'
 
 export function relatedAnswers(): BasePlugin {
   return {

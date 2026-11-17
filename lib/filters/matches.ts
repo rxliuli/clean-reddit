@@ -13,12 +13,9 @@ export function validateSelector(ast: Selector[][]): void {
   for (const tokens of ast) {
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i]
-      if (
-        token.type === SelectorType.Pseudo &&
-        token.name === 'upward' &&
-        i + 1 < tokens.length &&
-        isTraversal(tokens[i + 1])
-      ) {
+      if (token === undefined || token.type !== SelectorType.Pseudo || token.name !== 'upward') continue
+      const next = tokens[i + 1]
+      if (next !== undefined && isTraversal(next)) {
         throw new Error(
           ':upward() must be the last part of a selector — it cannot be followed by a combinator (e.g. +, ~, >, or descendant). ' +
           'Use :has() instead for sibling selectors.',
@@ -60,8 +57,10 @@ function matchesCompound(
 
   // Consume all simple selectors at current position (right-to-left)
   let i = pos
-  while (i >= 0 && !isTraversal(tokens[i])) {
-    const result = matchesToken(el, tokens[i])
+  while (i >= 0) {
+    const token = tokens[i]
+    if (token === undefined || isTraversal(token)) break
+    const result = matchesToken(el, token)
     if (!result) return null
     if (result !== true) target = result
     i--
@@ -70,8 +69,9 @@ function matchesCompound(
   // All tokens consumed — full match
   if (i < 0) return target
 
-  // tokens[i] is a combinator — resolve it
-  const combinator = tokens[i]
+  // tokens[i] is a combinator — resolve it. The loop only stops at `i >= 0`
+  // on a traversal token, so index `i` is always in range here.
+  const combinator = tokens[i]!
   const nextPos = i - 1 // position of the tokens before the combinator
 
   switch (combinator.type) {
@@ -325,7 +325,7 @@ function parseNth(data: string): { a: number; b: number } {
     return { a: 0, b: isNaN(num) ? 0 : num }
   }
 
-  const aStr = match[1]
+  const aStr = match[1] ?? ''
   const a = aStr === '' || aStr === '+' ? 1 : aStr === '-' ? -1 : parseInt(aStr, 10)
   const b = match[2] ? parseInt(match[2], 10) : 0
   return { a, b }

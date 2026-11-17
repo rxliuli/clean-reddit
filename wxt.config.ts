@@ -1,12 +1,20 @@
-import { defineConfig, UserManifest } from 'wxt'
+import { defineConfig, type UserManifest } from 'wxt'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  modules: ['@wxt-dev/module-react', 'wxt-module-safari-xcode'],
-  safariXcode: {
-    appCategory: 'public.app-category.productivity',
-    bundleIdentifier: 'com.rxliuli.clean-reddit',
-    developmentTeam: 'N2X78TUUFG',
+  modules: ['@wxt-dev/module-react', '@extport/wxt'],
+  extport: {
+    extension: 'ext_Pj0Z0duLCICS6suMsTXN',
+    safari: {
+      appCategory: 'public.app-category.productivity',
+      bundleIdentifier: 'com.rxliuli.clean-reddit',
+      developmentTeam: 'N2X78TUUFG',
+      issuerId: '48f39427-c063-4e33-98d2-31de80aad0be',
+      keyId: '8N27UWG9RG',
+    },
+    // Daily anonymous usage ping + the Firefox data-collection declaration,
+    // both injected by @extport/wxt — nothing in source. See the module docs.
+    analytics: true,
   },
   vite: () => ({
     plugins: [tailwindcss()],
@@ -40,7 +48,7 @@ export default defineConfig({
       manifest.browser_specific_settings = {
         gecko: {
           id: 'clean-reddit@rxliuli.com',
-          // @ts-expect-error https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings#data_collection_permissions
+          // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings#data_collection_permissions
           data_collection_permissions: {
             required: ['none'],
           },

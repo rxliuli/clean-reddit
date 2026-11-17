@@ -1,7 +1,7 @@
 import { messager } from './message'
 import { plugins } from './plugins'
 import { communities } from './plugins/left/communities'
-import { BasePlugin } from './plugins/type'
+import type { BasePlugin } from './plugins/type'
 
 const enabledByDefault: BasePlugin[] = [communities()]
 

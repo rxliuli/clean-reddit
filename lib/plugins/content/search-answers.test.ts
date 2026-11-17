@@ -5,7 +5,7 @@ import cachedHtml from './assets/search-answers-2.html?raw'
 
 describe('search-answers', () => {
   const plugin = searchAnswers()
-  const mainSelector = plugin.selectors![0]
+  const mainSelector = plugin.selectors![0]!
   let container: HTMLElement
 
   beforeEach(() => {
@@ -29,7 +29,7 @@ describe('search-answers', () => {
 
   it('should match hr after answers block', () => {
     container.innerHTML = streamingHtml + '<hr>'
-    const hrSelector = plugin.selectors![1]
+    const hrSelector = plugin.selectors![1]!
     expect(container.querySelectorAll(hrSelector).length).toBe(1)
   })
 

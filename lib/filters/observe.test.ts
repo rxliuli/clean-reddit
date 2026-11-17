@@ -109,7 +109,7 @@ describe('observe', () => {
       await waitForObserver()
 
       expect(cb).toHaveBeenCalledTimes(1)
-      expect(cb.mock.calls[0][0]).toHaveLength(5)
+      expect(cb.mock.calls[0]?.[0]).toHaveLength(5)
     })
   })
 
@@ -256,7 +256,7 @@ describe('observe', () => {
 
       expect(cb).toHaveBeenCalledTimes(1)
       // Both elements should be matched
-      const matched = cb.mock.calls[0][0] as Element[]
+      const matched = cb.mock.calls[0]?.[0] as Element[] | undefined
       expect(matched).toHaveLength(2)
     })
 

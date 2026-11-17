@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label'
 import { pluginGroups } from '@/lib/plugins'
 import { getConfig, setConfig } from '@/lib/config'
 import { messager } from '@/lib/message'
-import { BasePlugin } from '@/lib/plugins/type'
+import type { BasePlugin } from '@/lib/plugins/type'
 
 const groupLabels: Record<keyof typeof pluginGroups, string> = {
   ads: 'Ads & Promotions',

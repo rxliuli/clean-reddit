@@ -26,13 +26,13 @@ describe('right sidebar plugins', () => {
     querySelectorAll(container, selector)
 
   describe('home-sidebar', () => {
-    const selector = homeSidebar().selectors![0]
+    const selector = homeSidebar().selectors![0]!
 
     it('should match home page sidebar', () => {
       container.innerHTML = homeHtml
       const results = query(selector)
       expect(results.length).toBe(1)
-      expect(results[0].id).toBe('right-sidebar-contents')
+      expect(results[0]?.id).toBe('right-sidebar-contents')
     })
 
     it('should not match community page sidebar', () => {
@@ -52,13 +52,13 @@ describe('right sidebar plugins', () => {
   })
 
   describe('community-sidebar', () => {
-    const selector = communitySidebar().selectors![0]
+    const selector = communitySidebar().selectors![0]!
 
     it('should match community page sidebar', () => {
       container.innerHTML = communityHtml
       const results = query(selector)
       expect(results.length).toBe(1)
-      expect(results[0].id).toBe('right-sidebar-contents')
+      expect(results[0]?.id).toBe('right-sidebar-contents')
     })
 
     it('should not match home page sidebar', () => {
@@ -78,13 +78,13 @@ describe('right sidebar plugins', () => {
   })
 
   describe('post-sidebar', () => {
-    const selector = postSidebar().selectors![0]
+    const selector = postSidebar().selectors![0]!
 
     it('should match post page sidebar', () => {
       container.innerHTML = postHtml
       const results = query(selector)
       expect(results.length).toBe(1)
-      expect(results[0].id).toBe('right-sidebar-contents')
+      expect(results[0]?.id).toBe('right-sidebar-contents')
     })
 
     it('should not match home page sidebar', () => {
@@ -104,13 +104,13 @@ describe('right sidebar plugins', () => {
   })
 
   describe('user-sidebar', () => {
-    const selector = userSidebar().selectors![0]
+    const selector = userSidebar().selectors![0]!
 
     it('should match user page sidebar', () => {
       container.innerHTML = userHtml
       const results = query(selector)
       expect(results.length).toBe(1)
-      expect(results[0].id).toBe('right-sidebar-contents')
+      expect(results[0]?.id).toBe('right-sidebar-contents')
     })
 
     it('should not match home page sidebar', () => {
@@ -130,7 +130,7 @@ describe('right sidebar plugins', () => {
   })
 
   describe('legal-links', () => {
-    const selector = legalLinks().selectors![0]
+    const selector = legalLinks().selectors![0]!
 
     it('should match legal links element', () => {
       container.innerHTML = '<div class="legal-links">Terms</div>'

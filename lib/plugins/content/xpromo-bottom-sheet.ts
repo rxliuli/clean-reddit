@@ -1,5 +1,5 @@
 import { observe } from '@/lib/filters'
-import { BasePlugin } from '../type'
+import type { BasePlugin } from '../type'
 
 export function xpromoBottomSheet(): BasePlugin {
   return {

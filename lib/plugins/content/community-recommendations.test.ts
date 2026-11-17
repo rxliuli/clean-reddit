@@ -4,7 +4,7 @@ import html from './assets/in-feed-community-recommendations.html?raw'
 
 describe('community-recommendations', () => {
   const plugin = communityRecommendations()
-  const selector = plugin.selectors![0]
+  const selector = plugin.selectors![0]!
   let container: HTMLElement
 
   beforeEach(() => {
