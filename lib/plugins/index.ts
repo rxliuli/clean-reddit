@@ -1,6 +1,5 @@
 import { advertise } from './top/advertise'
 import { askAI } from './top/ask-ai'
-import { leadingIcon } from './top/leading-icon'
 import { navDot } from './top/nav-dot'
 import { searchTrending } from './top/search-trending'
 import { searchTrendingCommunities } from './top/search-trending-communities'
@@ -48,7 +47,7 @@ export const pluginGroups = {
     searchTrendingCommunities(),
   ],
   gamification: [games(), achievements(), earn()],
-  top: [navDot(), leadingIcon()],
+  top: [navDot()],
   left: [
     home(),
     moderation(),

@@ -28,7 +28,6 @@ Clean Reddit allows you to hide various UI elements across different sections of
 ### Top Navigation
 
 - **Notification dot** - Hide the notification badge
-- **Leading icon** - Hide the leading icon
 - **Ask AI** - Hide the Ask AI banner in search
 - **Advertise button** - Hide the advertise button
 - **Trending searches** - Hide trending searches in the search dropdown

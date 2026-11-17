@@ -8,6 +8,8 @@ export function askAI(): BasePlugin {
       // Ask AI banner on desktop search input
       'hr.trailing-divider',
       '.trailing-content-container',
+      // Ask AI pill in the expanded search composer (inside reddit-search-small's shadow root)
+      '.expanded-composer-ask-pill',
       // Ask AI banner on mobile banner
       '[href="/answers/"]:upward(faceplate-tracker)',
     ],
