@@ -18,6 +18,7 @@ import { legalLinks } from './right/legal-links'
 import { postSidebar } from './right/post-sidebar'
 import { userSidebar } from './right/user-sidebar'
 import { communityRecommendations } from './content/community-recommendations'
+import { openApp } from './content/open-app'
 import { promoted } from './content/promoted'
 import { recommendation } from './content/recommendation'
 import { relatedAnswers } from './content/related-answers'
@@ -37,6 +38,7 @@ export const pluginGroups = {
     premium(),
     advertiseOnReddit(),
     tryRedditPro(),
+    openApp(),
   ],
   ai: [askAI(), searchAnswers(), relatedAnswers()],
   recommendations: [
