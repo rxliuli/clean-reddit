@@ -3,11 +3,13 @@ import { plugins } from './plugins'
 import { communities } from './plugins/left/communities'
 import type { BasePlugin } from './plugins/type'
 
-const enabledByDefault: BasePlugin[] = [communities()]
+// A plugin's stored value means "keep this element visible": content.ts runs
+// every plugin whose value is falsy, so `true` = shown, `false` = hidden.
+const visibleByDefault: BasePlugin[] = [communities()]
 
 export const DEFAULT_CONFIG: Record<string, boolean> = plugins.reduce(
   (config, plugin) => {
-    config[plugin.name] = enabledByDefault.some((d) => d.name === plugin.name)
+    config[plugin.name] = visibleByDefault.some((d) => d.name === plugin.name)
     return config
   },
   {} as Record<string, boolean>,

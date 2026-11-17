@@ -26,19 +26,19 @@ const groupLabels: Record<keyof typeof pluginGroups, string> = {
 
 function PluginSwitch({
   plugin,
-  enabled,
+  visible,
   onToggle,
 }: {
   plugin: BasePlugin
-  enabled: boolean
-  onToggle: (enabled: boolean) => void
+  visible: boolean
+  onToggle: (visible: boolean) => void
 }) {
   return (
     <div className="flex items-center justify-between py-1.5 gap-4">
       <Label htmlFor={plugin.name} className="cursor-pointer text-sm">
         {plugin.description}
       </Label>
-      <Switch id={plugin.name} checked={enabled} onCheckedChange={onToggle} />
+      <Switch id={plugin.name} checked={visible} onCheckedChange={onToggle} />
     </div>
   )
 }
@@ -54,8 +54,8 @@ export function App() {
     })
   }, [])
 
-  const handleToggle = async (pluginName: string, enabled: boolean) => {
-    const newConfig = { ...config, [pluginName]: enabled }
+  const handleToggle = async (pluginName: string, visible: boolean) => {
+    const newConfig = { ...config, [pluginName]: visible }
     setConfigState(newConfig)
     await setConfig(newConfig)
     const tabs = await browser.tabs.query({ currentWindow: true, active: true })
@@ -108,8 +108,8 @@ export function App() {
                     <PluginSwitch
                       key={plugin.name}
                       plugin={plugin}
-                      enabled={config[plugin.name] ?? false}
-                      onToggle={(enabled) => handleToggle(plugin.name, enabled)}
+                      visible={config[plugin.name] ?? false}
+                      onToggle={(visible) => handleToggle(plugin.name, visible)}
                     />
                   ))}
                 </div>
